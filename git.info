@@ -1,0 +1,2 @@
+To use a short form of the command git push
+	git push --set-upstream origin master
