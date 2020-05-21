@@ -35,4 +35,10 @@ To add aliases
 	git config --global alias.unstage 'reset HEAD --'
 
 	git config --global alias.last 'log -1 HEAD'
+  git config --global alias.undo 'reset --soft HEAD^'
+  git config --global alias.hist "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short"
+  git config --global alias.type 'cat-file -t'
+  git config --global alias.dump 'cat-file -p'
+  git config --global alias.who 'shortlog -sne'
+  git config --global alias.oneline "log --pretty=oneline --abbrev-commit --graph --decorate"
 
