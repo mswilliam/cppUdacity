@@ -4,7 +4,16 @@ To configure the user name
 	git config --global user.name "mswilliam"
 To configure the email
 	git config --global user.email "m_s_william@yahoo.fr"
-ssh
+
+hppts authentication
+  Generate personal access token
+    (https://github.com/settings/tokens)
+  Create a credential file
+    vi ~/.my-git-credential
+      https://username:token@githost
+      eg https://mswilliam:6a99139a6b217790ef99b6a90c4bea9c2a50c968@github.com
+
+ssh authentication
 
 To check to see if there is any existing ssh keys
 	ls -al ~/.ssh
