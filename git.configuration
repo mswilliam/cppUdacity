@@ -4,8 +4,11 @@ To configure the user name
 	git config --global user.name "mswilliam"
 To configure the email
 	git config --global user.email "m_s_william@yahoo.fr"
-To check to see if thre is any existing ssh keys
+ssh
+
+To check to see if there is any existing ssh keys
 	ls -al ~/.ssh
+SSH(https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh)
 To generate a new ssh key
 	Create new ssh using the provided email	
 		ssh-keygen -t rsa -b 4096 -C "m_s_william@yahoo.fr"
@@ -23,3 +26,13 @@ To configure github account to use new ssh key
 Testing your SSH connection
 	ssh -T git@github.com
 		
+To add aliases
+	git config --global alias.co checkout
+	git config --global alias.br branch
+	git config --global alias.ci commit
+	git config --global alias.st status
+
+	git config --global alias.unstage 'reset HEAD --'
+
+	git config --global alias.last 'log -1 HEAD'
+
