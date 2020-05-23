@@ -17,7 +17,8 @@ include sources.mk
 BASENAME	= executable
 TARGET 		= $(BASENAME).out
 OBJS = $(SRCS:.cpp=.o)
-SIZE = size - Atd
+SIZE = size
+NM = nm -S --defined --size-sort -S
 
 #Compiler Flags
 CC = g++
@@ -46,6 +47,8 @@ LDFLAGS	= -Wl,-Map=$(BASENAME).map
 #Generate target
 $(TARGET) : $(OBJS)
 	$(CC) $(INCLUDES) $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(NM) $@
+	$(SIZE) -Adt $@
 	$(SIZE) $@
 
 .PHONY : print
