@@ -40,7 +40,6 @@ CFLAGS		=	-Wall                   \
             -Wfloat-equal           \
             -Wcast-qual             \
             -Wshadow                \
-            -Wbad-function-cast     \
             -Wundef                 \
             -Wunused-variable       \
 				 		-Werror
@@ -58,7 +57,7 @@ LDFLAGS	= -Wl,-Map=$(BASENAME).map
 
 #Generate .o files 
 %.o : %.cpp
-	$(CC) -c $(INCLUDES) $(CPPFLAGS) $< $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(CC) -c $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 #Generate target
 $(TARGET) : $(OBJS)
@@ -71,7 +70,11 @@ $(TARGET) : $(OBJS)
 print :
 	$(info OBJS is $(OBJS))
 	$(info SRCS is $(SRCS))
-	$(info TARGET is $(TARGET))
+	$(info CC is $(CC))
+	$(info INCLUDES is $(INCLUDES))
+	$(info CFLAGS is $(CFLAGS))
+	$(info LDFLAGS is $(LDFLAGS))
+	$(info CPPFLAGS is $(CPPFLAGS))
 
 .PHONY : build
 build : all

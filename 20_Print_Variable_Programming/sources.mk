@@ -1,4 +1,4 @@
 SRCS:=		\
-	$(shell echo *.cpp)
+	$(shell ls *.cpp)
 
 INCLUDES =
