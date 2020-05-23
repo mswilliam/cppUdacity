@@ -1,0 +1,11 @@
+# Not .o, .a .d .i
+*.[oadi]
+
+# Not tmp file
+*~
+
+# Not map file
+*.map
+
+# Not .out file
+*.out
