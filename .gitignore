@@ -10,5 +10,11 @@
 # Not .out file
 *.out
 
+Not hidden file
+.*
+
 #Not .swp file
 *.swp
+
+#Not .swo file
+*.swo
