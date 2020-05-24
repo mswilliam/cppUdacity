@@ -9,3 +9,6 @@
 
 # Not .out file
 *.out
+
+#Not .swp file
+*.swp
