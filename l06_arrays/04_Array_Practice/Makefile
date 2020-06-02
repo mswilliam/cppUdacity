@@ -27,6 +27,8 @@ CC = g++
 CPPFLAGS = -MD
 
 #C/C++ program flags
+#           -gdwarf \ #Produce debugging information in DWARF format
+#             DWARF: most expressive & best supported debugging GDB format
 #           -Wmaybe-uninitialized \ #variables declared but not initialised
 #           -Wfloat-equal \ #inappropriate floating point comparisons.
 #           -Wcast-qual \ #pointer is cast so as to remove a type qualifier
@@ -35,7 +37,7 @@ CPPFLAGS = -MD
 #           -Wundef \ #undefined identifier is evaluated in #if directive
 #           -Wunused-variable \ #local or static variable is unused.
 
-CFLAGS		=	-g                      \
+CFLAGS		=	-gdwarf                 \
             -Wall                   \
             -Wmaybe-uninitialized   \
             -Wfloat-equal           \
