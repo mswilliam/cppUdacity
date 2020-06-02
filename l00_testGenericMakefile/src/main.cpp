@@ -11,86 +11,67 @@
  */
 
 #include <iostream>
-#include <stdio.h>
 
 const uint8_t MAX_SIZE{4};
 
-int main()
-{
+int main() {
   int32_t loc_userInput[MAX_SIZE];
 
-  //Read the array
-  for(uint8_t loc_index{0}; loc_index < MAX_SIZE; ++loc_index)
-  {
+  // Read the array
+  for (uint8_t loc_index{0}; loc_index < MAX_SIZE; ++loc_index) {
     std::cout << "Enter the number "  \
       << 1 + loc_index
       << "\n";
     std::cin >> loc_userInput[loc_index];
-
   }
 
-  //Print the array
-  for(uint8_t loc_index{0}; loc_index < MAX_SIZE; ++loc_index)
-  {
+  // Print the array
+  for (uint8_t loc_index{0}; loc_index < MAX_SIZE; ++loc_index) {
     std::cout << loc_userInput[loc_index] \
       << " ";
   }
   std::cout << "\n";
 
-  //Print the array in reverse order
-  for(uint8_t loc_index{0}; loc_index < MAX_SIZE; ++loc_index)
-  {
+  // Print the array in reverse order
+  for (uint8_t loc_index{0}; loc_index < MAX_SIZE; ++loc_index) {
     std::cout << loc_userInput[MAX_SIZE - loc_index - 1] \
       << " ";
   }
   std::cout << "\n";
 
-  //Sort array
+  // Sort array
   {
     uint8_t loc_inserted_index{0};
-    bool is_inserted_location_found{false};
-
-    for(uint8_t loc_index{1}; loc_index < MAX_SIZE; ++loc_index)  
-    {
-      //Insert loc_userInput[loc_index] in [loc_left_index..loc_rigth_index]  
-      //find the index to inset into
+    for (uint8_t loc_index{1}; loc_index < MAX_SIZE; ++loc_index) {
+      // Insert loc_userInput[loc_index] in [loc_left_index..loc_rigth_index]
+      // find the index to inset into
       uint8_t loc_left_index{0};
       uint8_t loc_rigth_index{loc_index};
-      while(false == is_inserted_location_found)
-      {
+      bool loc_is_inserted_location_found{false};
+      while (false == loc_is_inserted_location_found) {
         loc_inserted_index = (loc_left_index + loc_rigth_index) / 2;
-        if(loc_userInput[loc_inserted_index] < loc_userInput[loc_index])
-        {
+        if (loc_userInput[loc_inserted_index] < loc_userInput[loc_index]) {
           loc_left_index = 1 + loc_inserted_index;
-          if(loc_left_index >= loc_rigth_index)
-          {
+          if (loc_left_index >= loc_rigth_index) {
             loc_inserted_index = loc_rigth_index;
-            is_inserted_location_found = true;
+            loc_is_inserted_location_found = true;
           }
-        }
-        else  if(loc_userInput[loc_inserted_index] > loc_userInput[loc_index])
-        {
-          loc_rigth_index = -1 + loc_inserted_index;
-          if(loc_left_index >= loc_rigth_index)
-          {
+        } else if (loc_userInput[loc_inserted_index] > loc_userInput[loc_index]) {
+          loc_rigth_index = loc_inserted_index;
+          if (loc_left_index >= loc_rigth_index) {
             loc_inserted_index = loc_left_index;
-            is_inserted_location_found = true;
+            loc_is_inserted_location_found = true;
           }
-        }
-        else
-        {
-          is_inserted_location_found = true;
+        } else {
+          loc_is_inserted_location_found = true;
         }
       }
-
-      if(true == is_inserted_location_found && loc_inserted_index < loc_index)
-      {
-        //insert at the found position
+      if (true == loc_is_inserted_location_found && loc_inserted_index < loc_index) {
+        // insert at the found position
         int32_t loc_temp{loc_userInput[loc_index]};
-        for(uint8_t loc_shift_index{loc_index};       \
-          loc_shift_index >= loc_inserted_index + 1;  \
-          --loc_shift_index)
-        {
+        for (uint8_t loc_shift_index{loc_index};       \
+            loc_shift_index >= loc_inserted_index + 1;  \
+            --loc_shift_index) {
           loc_userInput[loc_shift_index] = loc_userInput[loc_shift_index - 1];
         }
         loc_userInput[loc_inserted_index] = loc_temp;
@@ -98,14 +79,12 @@ int main()
     }
   }
 
-    //Print the array                                             
-    for(uint8_t loc_index{0}; loc_index < MAX_SIZE; ++loc_index)
-    {
-      std::cout << loc_userInput[loc_index] \
-        << " ";
-    }
-    std::cout << "\n";
-
-    return 0;
-
+  // Print the array
+  for (uint8_t loc_index{0}; loc_index < MAX_SIZE; ++loc_index) {
+    std::cout << loc_userInput[loc_index] \
+      << " ";
+  }
+  std::cout << "\n";
+  return 0;
 }
+
