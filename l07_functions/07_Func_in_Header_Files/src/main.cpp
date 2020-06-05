@@ -12,8 +12,9 @@
  *
  **/
 
+#include "include/main.h"
 #include<iostream>
-#include "main.h"
+
 
 int main() {
   int m1 = 4;

@@ -3,7 +3,7 @@ EXCECUTABLE = $(BUILDDIR)/$(PROJECT)
 
 # Directories specification
 SRCDIRS := src
-INCDIRS := include
+INCDIRS := .
 BUILDDIR := build
 DOCDIR := doc
 
@@ -163,10 +163,11 @@ size: $(EXCECUTABLE)
 # Generate documentation
 doc:
 	@$(DOC) $(DOCFLAGS)
-	@sed -i -r 's/^INPUT                  =/INPUT                  = ~\/cours\/cpp\/code\/l00_testGenericMakefile\/src/g' Doxyfile
+	@sed -i -r 's/^INPUT                  =/INPUT                     = .\/include .\/src/g' Doxyfile
 	@sed -i -r 's/^RECURSIVE              = NO/RECURSIVE                  = YES/g' Doxyfile
 	@sed -i -r 's/^FILTER_SOURCE_FILES    = NO/FILTER_SOURCE_FILES    = YES/g' Doxyfile
 	@sed -i -r 's/^SOURCE_BROWSER         = NO/SOURCE_BROWSER         = YES/g' Doxyfile
+	@sed -i -r 's/^INLINE_SOURCES         = NO/INLINE_SOURCES         = YES/ ' Doxyfile
 	@sed -i -r 's/^FILTER_SOURCE_FILES    = NO/FILTER_SOURCE_FILES    = YES/g' Doxyfile
 	@sed -i -r 's/^SOURCE_BROWSER         = NO/SOURCE_BROWSER         = YES/g' Doxyfile
 	@sed -i -r 's/^PROJECT_NAME           = "My Project"/PROJECT_NAME           = "Test Doxygen"/g' Doxyfile
