@@ -44,7 +44,7 @@ DEPFLAGS := -MMD -MP
 CPPLINT := cpplint
 override CPPLINTFLAGS += --linelength=100 --filter=-build/header_guard,-runtime/references,-runtime/indentation_namespace,-build/namespaces --extensions=$(subst $( ),$(,),$(SRCEXTS)) --headers=$(subst $( ),$(,),$(HDREXTS))
 CPPCHECK := cppcheck
-override CPPCHECKFLAGS += --enable=style,warning,missingInclude
+override CPPCHECKFLAGS += --enable=style,warning,missingInclude --check-config --template=gcc -I $(INCDIRS)\/include
 SIZE = size
 SIZEFLAGS := -Adt
 NM = nm
@@ -163,7 +163,7 @@ size: $(EXCECUTABLE)
 # Generate documentation
 doc:
 	@$(DOC) $(DOCFLAGS)
-	@sed -i -r 's/^INPUT                  =/INPUT                     = .\/include .\/src/g' Doxyfile
+	@sed -i -r 's/^INPUT                  =/INPUT                     = $(INCDIRS)\/include $(SRCDIRS)/g' Doxyfile
 	@sed -i -r 's/^RECURSIVE              = NO/RECURSIVE                  = YES/g' Doxyfile
 	@sed -i -r 's/^FILTER_SOURCE_FILES    = NO/FILTER_SOURCE_FILES    = YES/g' Doxyfile
 	@sed -i -r 's/^SOURCE_BROWSER         = NO/SOURCE_BROWSER         = YES/g' Doxyfile
