@@ -1,13 +1,12 @@
+# Directories specification
+SRCDIRS := .
+INCDIRS := .
+INCDIRS += $(CPPUTEST_HOME)/include/CppUTest
+BUILDDIR := build
+
 PROJECT := executable #$(notdir $(CURDIR))
 EXCECUTABLE = $(BUILDDIR)/$(PROJECT)
 
-# Directories specification
-SRCDIRS := main
-SRCDIRS += components\/operations\/src
-SRCDIRS += components\/operations\/test
-INCDIRS := components\/operations\/include
-BUILDDIR := build
-DOCDIR := doc
 
 # @note: to add another source extension, add to herer AND make sure to
 #	write the " $(BUILDDIR)/%.o: %.ext " rule for this extention in order to work
@@ -19,6 +18,8 @@ HDREXTS := hpp hh h hxx h++ H
 SOURCES := $(foreach dir, $(SRCDIRS), $(foreach ext, $(SRCEXTS), $(wildcard $(dir)/*.$(ext))))
 INCLUDES := $(foreach dir, $(INCDIRS), $(foreach ext, $(HDREXTS), $(wildcard $(dir)/*.$(ext))))
 OBJECTS := $(foreach ext, $(SRCEXTS), $(patsubst %.$(ext), $(BUILDDIR)/%.o, $(filter %.$(ext), $(SOURCES))))
+
+
 
 # Compilers and flags
 
@@ -36,25 +37,24 @@ OBJECTS := $(foreach ext, $(SRCEXTS), $(patsubst %.$(ext), $(BUILDDIR)/%.o, $(fi
 #           
 CC := gcc
 CXX := g++
+
 override CFLAGS += -gdwarf -fprofile-arcs -ftest-coverage -Wall -Wmaybe-uninitialized -Wfloat-equal -Wcast-qual -Wshadow -Wundef -Wunused-variable -Werror -O0 -std=c++11 --short-enums
 override CXXFLAGS += -gdwarf -Wall -Wmaybe-uninitialized -Wfloat-equal -Wcast-qual -Wshadow -Wundef -Wunused-variable -Werror -O0 -std=c++11 --short-enums
-override LDFLAGS += -Wl,-Map=$(BUILDDIR)/MAP.map
+
+#  Linker options
+#  You need to add CppUTest library to the linker flags, for example, like:
+#  (The last flag is only needed when you want to use extensions such as mocking)
+
+override LDFLAGS += -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
+
 INCFLAGS := $(INCDIRS:%=-I%)
 DEPFLAGS := -MMD -MP
 
-# Tools and flags
-CPPLINT := cpplint
-override CPPLINTFLAGS += --linelength=100 --filter=-build/header_guard,-runtime/references,-runtime/indentation_namespace,-build/namespaces --extensions=$(subst $( ),$(,),$(SRCEXTS)) --headers=$(subst $( ),$(,),$(HDREXTS))
-CPPCHECK := cppcheck
-override CPPCHECKFLAGS += --enable=style,warning,missingInclude --check-config --template=gcc -I $(INCDIRS)\/include
-SIZE = size
-SIZEFLAGS := -Adt
-NM = nm
-NMFLAGS := -S --defined --size-sort -S
-DOC = doxygen
-DOCFLAGS := -g
+
 # This makefile name
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
+
+
 
 # Function to compile using $(CC) : (files: .c)
 define compilecc
@@ -94,33 +94,13 @@ $(BUILDDIR)/%.o: %.C $(BUILDDIR)/%.d $(MAKEFILE) $@
 $(BUILDDIR)/%.d: ;
 
 
-.PHONY: all help run clean force cpplint cppcheck size info doc list-headers list-sources list-objects debug
+
+
+.PHONY: all help run clean
 
 # Main target for building
 all: $(EXCECUTABLE)
 	@echo Done.
-
-# Print commands
-help:
-	@echo "Some useful make targets:"
-	@echo " make all          - Build entire project (modified sources only or dependents)"
-	@echo " make run          - Build and launch excecutable immediately"
-	@echo " make force        - Force rebuild of entire project (clean first)"
-	@echo " make clean        - Remove all build output"
-	@echo " make info         - Print out project configurations"	
-	@echo " make cpplint      - C++ style checker tool following Google's C++ style guide"
-	@echo " make cppcheck     - Static code analysis tool for the C and C++"
-	@echo " make size		      - Print size info"
-	@echo " make doc		      - Generate documentation"
-	@echo " make list-headers - Print out all recognized headers files"
-	@echo " make list-sources - Print out all recognized sources files"
-	@echo " make list-objects - Print out final objects"
-	@echo ""
-
-# make sure Make do not delete included dependencies files
-.PRECIOUS: $(BUILDDIR)/%.d
-# include the dependency files here (should not be before first target)
-include $(wildcard $(foreach ext, $(SRCEXTS), $(patsubst %.$(ext), $(BUILDDIR)/%.d, $(filter %.$(ext), $(SOURCES)))))
 
 
 # Compile binary if necessary, checks for modified files first
@@ -142,45 +122,9 @@ run: $(EXCECUTABLE)
 clean:
 	@rm -rf $(EXCECUTABLE)
 	@rm -rf $(BUILDDIR)
-	@rm -rf $(DOCDIR)
 	@echo Cleaned.
 
-# Force build of all files
-force: clean all
 
-# C++ style checker tool (following Google's C++ style guide)
-cpplint:
-	@$(CPPLINT) $(CPPLINTFLAGS) $(SOURCES) $(INCLUDES)
-
-# Static code analysis tool for the C and C++
-cppcheck:
-	@$(CPPCHECK) $(CPPCHECKFLAGS) $(SOURCES) $(INCLUDES) $(INCFLAGS)
-
-# Print size informations
-size: $(EXCECUTABLE)
-	@$(NM) $(NMFLAGS) $(EXCECUTABLE)
-	@$(SIZE) $(SIZEFLAGS) $(EXCECUTABLE)
-	@$(SIZE) $(EXCECUTABLE)
-
-# Generate documentation
-doc:
-	@$(DOC) $(DOCFLAGS)
-	@sed -i -r 's/^INPUT                  =/INPUT                     = $(INCDIRS)\/include $(SRCDIRS)/g' Doxyfile
-	@sed -i -r 's/^RECURSIVE              = NO/RECURSIVE                  = YES/g' Doxyfile
-	@sed -i -r 's/^FILTER_SOURCE_FILES    = NO/FILTER_SOURCE_FILES    = YES/g' Doxyfile
-	@sed -i -r 's/^SOURCE_BROWSER         = NO/SOURCE_BROWSER         = YES/g' Doxyfile
-	@sed -i -r 's/^INLINE_SOURCES         = NO/INLINE_SOURCES         = YES/ ' Doxyfile
-	@sed -i -r 's/^FILTER_SOURCE_FILES    = NO/FILTER_SOURCE_FILES    = YES/g' Doxyfile
-	@sed -i -r 's/^SOURCE_BROWSER         = NO/SOURCE_BROWSER         = YES/g' Doxyfile
-	@sed -i -r 's/^PROJECT_NAME           = "My Project"/PROJECT_NAME           = "Test Doxygen"/g' Doxyfile
-	@sed -i -r 's/^OUTPUT_DIRECTORY       =/OUTPUT_DIRECTORY       = .\/$(DOCDIR) /g' Doxyfile
-	@sed -i -r 's/^PROJECT_NUMBER         =/PROJECT_NUMBER         = 1.0/g' Doxyfile
-	@$(DOC) Doxyfile
-	@make -C $(DOCDIR)/latex pdf
-	@mv Doxyfile $(DOCDIR)/
-#	@mkdir -p $(DOCDIR)
-#	@mv html $(DOCDIR)/
-#	@mv latex $(DOCDIR)/	
 
 # Prints out project configurations
 info:
@@ -205,34 +149,19 @@ info:
 	@echo DocFlags: $(DOCFLAGS)
 
 
+
 list-sources:
 	$(foreach src, $(SOURCES), $(call print,$(src)))
 
 list-headers:
 	$(foreach hdr, $(INCLUDES), $(call print,$(hdr)))
 
-list-objects:
-	$(foreach obj, $(OBJECTS), $(call print,$(obj)))
 
 
-# Debugging of this makefile, for development
-debug:
-	@echo SourceExts: $(SRCEXTS)
-	@echo HeaderExts: $(HDREXTS)
-
-
-# 
+	# 
 # ### Utils ###
 #
 define print
 	@echo $1
 
 endef
-
-# comma -> $(,)
-, = ,
-# blank -> $(blank)
-blank =
-# space -> $( )
-space = $(blank) $(blank)
-$(space) = $(space)

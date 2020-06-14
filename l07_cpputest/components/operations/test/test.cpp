@@ -6,14 +6,33 @@
  *
  *  \author   MANGOUA SOFACK William
  *  \version  1.0
- *  \date     2020-06-07
+ *  \date     2020-06-14
  *  \copyright GNU Public License.
  *
  *
  *
  **/
 
-#include "../components/operations/include/operations.hpp"
+#include "CppUtest/TestHarness.h"
+#include "../include/operations.hpp"
+
+TEST_GROUP (Operations) {
+
+  //  Define data accessible to the test group members here.
+
+  void setup () {
+    //  initialization seps are executed before each TEST
+  }
+
+  void tearDown () {
+    //  ceanup steps are excuted after each TEST
+  }
+};
+
+
+
+/*
+
 
 int main() {
   uint8_t operation = '*';
@@ -27,3 +46,4 @@ int main() {
   }
   return 0;
 }
+*/
