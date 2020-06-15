@@ -1,7 +1,7 @@
 # Directories specification
 SRCDIRS := .
 INCDIRS := .
-INCDIRS += $(CPPUTEST_HOME)/include/CppUTest
+INCVENDORDIRS += $(CPPUTEST_HOME)/include
 BUILDDIR := build
 
 PROJECT := executable #$(notdir $(CURDIR))
@@ -47,7 +47,9 @@ override CXXFLAGS += -gdwarf -Wall -Wmaybe-uninitialized -Wfloat-equal -Wcast-qu
 
 override LDFLAGS += -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
 
-INCFLAGS := $(INCDIRS:%=-I%)
+INCFLAGS := $(INCDIRS:%=-iquote %)
+INCVENDORFLAGS := $(INCVENDORDIRS:%=-isystem %)
+INCFLAGS += $(INCVENDORFLAGS)
 DEPFLAGS := -MMD -MP
 
 

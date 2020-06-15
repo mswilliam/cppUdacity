@@ -13,7 +13,7 @@
  *
  **/
 
-#include "CommandLineTestRunner.h"
+#include "CppUTest/CommandLineTestRunner.h"
 
 int main(int argc, char const *argv[])
 {

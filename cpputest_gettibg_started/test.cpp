@@ -13,7 +13,7 @@
  *
  **/
 
-#include "TestHarness.h"
+#include "CppUTest/TestHarness.h"
 
 TEST_GROUP (FirstTestGroup) {
 
