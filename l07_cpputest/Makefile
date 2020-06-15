@@ -1,13 +1,15 @@
-PROJECT := executable #$(notdir $(CURDIR))
-EXCECUTABLE = $(BUILDDIR)/$(PROJECT)
-
 # Directories specification
 SRCDIRS := main
 SRCDIRS += components\/operations\/src
-SRCDIRS += components\/operations\/test
+SRC_OPERATIONS_TEST_DIRS := components\/operations\/src
+SRC_OPERATIONS_TEST_DIRS += components\/operations\/tests
 INCDIRS := components\/operations\/include
+INCVENDORDIRS := $(CPPUTEST_HOME)\/include
 BUILDDIR := build
 DOCDIR := doc
+
+PROJECT := executable
+EXCECUTABLE = $(BUILDDIR)\/$(PROJECT)
 
 # @note: to add another source extension, add to herer AND make sure to
 #	write the " $(BUILDDIR)/%.o: %.ext " rule for this extention in order to work
@@ -20,7 +22,14 @@ SOURCES := $(foreach dir, $(SRCDIRS), $(foreach ext, $(SRCEXTS), $(wildcard $(di
 INCLUDES := $(foreach dir, $(INCDIRS), $(foreach ext, $(HDREXTS), $(wildcard $(dir)/*.$(ext))))
 OBJECTS := $(foreach ext, $(SRCEXTS), $(patsubst %.$(ext), $(BUILDDIR)/%.o, $(filter %.$(ext), $(SOURCES))))
 
+# To generate test exe for operation component
+SOURCES_OPERATIONS_TEST := $(foreach dir, $(SRC_OPERATIONS_TEST_DIRS), $(foreach ext, $(SRCEXTS), $(wildcard $(dir)/*.$(ext))))
+OBJECTS_OPERATIONS_TEST := $(foreach ext, $(SRCEXTS), $(patsubst %.$(ext), $(BUILDDIR)/%.o, $(filter %.$(ext), $(SOURCES_OPERATIONS_TEST))))
+
 # Compilers and flags
+
+CC := gcc
+CXX := g++
 
 #C/C++ program flags
 #           -gdwarf \ #Produce debugging information in DWARF format
@@ -34,17 +43,26 @@ OBJECTS := $(foreach ext, $(SRCEXTS), $(patsubst %.$(ext), $(BUILDDIR)/%.o, $(fi
 #           -Wundef \ #undefined identifier is evaluated in #if directive
 #           -Wunused-variable \ #local or static variable is unused.
 #           
-CC := gcc
-CXX := g++
 override CFLAGS += -gdwarf -fprofile-arcs -ftest-coverage -Wall -Wmaybe-uninitialized -Wfloat-equal -Wcast-qual -Wshadow -Wundef -Wunused-variable -Werror -O0 -std=c++11 --short-enums
 override CXXFLAGS += -gdwarf -Wall -Wmaybe-uninitialized -Wfloat-equal -Wcast-qual -Wshadow -Wundef -Wunused-variable -Werror -O0 -std=c++11 --short-enums
+
 override LDFLAGS += -Wl,-Map=$(BUILDDIR)/MAP.map
-INCFLAGS := $(INCDIRS:%=-I%)
+
+#  Linker options
+#  You need to add CppUTest library to the linker flags, for example, like:
+#  (The last flag is only needed when you want to use extensions such as mocking)
+
+override LDTESTFLAGS += -L$(CPPUTEST_HOME)\/lib -lCppUTest -lCppUTestExt
+
+INCFLAGS := $(INCDIRS:%=-iquote %)
+INCVENDORFLAGS := $(INCVENDORDIRS:%=-isystem %)
+INCFLAGS += $(INCVENDORFLAGS)
+
 DEPFLAGS := -MMD -MP
 
 # Tools and flags
 CPPLINT := cpplint
-override CPPLINTFLAGS += --linelength=100 --filter=-build/header_guard,-runtime/references,-runtime/indentation_namespace,-build/namespaces --extensions=$(subst $( ),$(,),$(SRCEXTS)) --headers=$(subst $( ),$(,),$(HDREXTS))
+override CPPLINTFLAGS += --linelength=100 --filter=-build\/header_guard,-runtime\/references,-runtime\/indentation_namespace,-build\/namespaces --extensions=$(subst $( ),$(,),$(SRCEXTS)) --headers=$(subst $( ),$(,),$(HDREXTS))
 CPPCHECK := cppcheck
 override CPPCHECKFLAGS += --enable=style,warning,missingInclude --check-config --template=gcc -I $(INCDIRS)\/include
 SIZE = size
@@ -94,7 +112,7 @@ $(BUILDDIR)/%.o: %.C $(BUILDDIR)/%.d $(MAKEFILE) $@
 $(BUILDDIR)/%.d: ;
 
 
-.PHONY: all help run clean force cpplint cppcheck size info doc list-headers list-sources list-objects debug
+.PHONY: all help tests run clean force cpplint cppcheck size info doc list-headers list-sources list-objects debug
 
 # Main target for building
 all: $(EXCECUTABLE)
@@ -105,6 +123,7 @@ help:
 	@echo "Some useful make targets:"
 	@echo " make all          - Build entire project (modified sources only or dependents)"
 	@echo " make run          - Build and launch excecutable immediately"
+	@echo " make tests        - Build and launch test excecutable immediately"
 	@echo " make force        - Force rebuild of entire project (clean first)"
 	@echo " make clean        - Remove all build output"
 	@echo " make info         - Print out project configurations"	
@@ -132,6 +151,17 @@ ifeq ($(filter-out %.c,$(SOURCES)),$(blank))
 else
 	@$(CXX) -o $@ $(OBJECTS) $(CXXFLAGS) $(LDFLAGS)
 	@echo CXX: $@
+endif
+
+# Compile test binary if necessary, checks for modified files first
+# @note: uses CC if all source files are .c , otherwise uses CXX
+tests: $(OBJECTS_OPERATIONS_TEST) $(MAKEFILE) $@
+ifeq ($(filter-out %.c,$(SOURCES)),$(blank))
+	@$(CC) -o $(BUILDDIR)\/tests_operations $(OBJECTS_OPERATIONS_TEST) $(CFLAGS) $(LDTESTFLAGS)
+	@./$(BUILDDIR)\/tests_operations
+else
+	@$(CXX) -o $(BUILDDIR)\/tests_operations $(OBJECTS_OPERATIONS_TEST) $(CXXFLAGS) $(LDTESTFLAGS)
+	@./$(BUILDDIR)\/tests_operations
 endif
 
 # Launch excecutable, compile if necessary
@@ -196,6 +226,7 @@ info:
 	@echo CCFlags: $(CFLAGS)
 	@echo CXXFlags: $(CXXFLAGS)
 	@echo LDFlags: $(LDFLAGS)
+	@echo LDTestFlags: $(LDTESTFLAGS)
 	@echo IncFlags: $(INCFLAGS)
 	@echo DepFlags: $(DEPFLAGS)
 	@echo CppLintFlags : $(CPPLINTFLAGS)
@@ -203,7 +234,6 @@ info:
 	@echo SizeFlags : $(SIZEFLAGS)
 	@echo NmFlags: $(NMFLAGS)
 	@echo DocFlags: $(DOCFLAGS)
-
 
 list-sources:
 	$(foreach src, $(SOURCES), $(call print,$(src)))

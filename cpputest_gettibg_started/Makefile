@@ -56,8 +56,6 @@ DEPFLAGS := -MMD -MP
 # This makefile name
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 
-
-
 # Function to compile using $(CC) : (files: .c)
 define compilecc
 	@mkdir -p $(dir $1)
