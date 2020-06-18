@@ -44,7 +44,7 @@ CXX := g++
 #           -Wunused-variable \ #local or static variable is unused.
 #           
 override CFLAGS += -gdwarf -fprofile-arcs -ftest-coverage -Wall -Wmaybe-uninitialized -Wfloat-equal -Wcast-qual -Wshadow -Wundef -Wunused-variable -Werror -O0 -std=c++11 --short-enums
-override CXXFLAGS += -gdwarf -Wall -Wmaybe-uninitialized -Wfloat-equal -Wcast-qual -Wshadow -Wundef -Wunused-variable -Werror -O0 -std=c++11 --short-enums
+override CXXFLAGS += -gdwarf -fprofile-arcs -ftest-coverage -Wall -Wmaybe-uninitialized -Wfloat-equal -Wcast-qual -Wshadow -Wundef -Wunused-variable -Werror -O0 -std=c++11 --short-enums
 
 override LDFLAGS += -Wl,-Map=$(BUILDDIR)/MAP.map
 
