@@ -16,12 +16,18 @@ build_dir="$(pwd)/build/components"
 
 for component in $(ls ${component_dir})
 do
-  for test_file_cpp in $(ls ${component_dir}/${component}/tests)
+  for test_file_cpp in $(ls ${component_dir}/${component}/src)
   do
     test_file=${test_file_cpp%.cpp}
-    gcov --object-directory ${build_dir}/${component}/tests/ ${component_dir}/${component}/tests/${test_file_cpp} ${build_dir}/${component}/tests/${test_file} --object-file ${build_dir}/${component}/tests/${test_file}.o ${build_dir}/${component}/tests/${test_file}
+    gcov_dir=${build_dir}/${component}/src/
+    gcov_in_file=${component_dir}/${component}/src/${test_file_cpp}
+    gcov_data_file=${build_dir}/${component}/src/${test_file}
+    gcov_objet_file=${build_dir}/${component}/src/${test_file}.o
 
-    mv *.gcov ${build_dir}/${component}/tests/
+  
+    gcov --object-directory ${gcov_dir}  ${gcov_in_file} ${gcov_data_file} --object-file ${gcov_objet_file} ${gcov_data_file}
+
+    mv *.gcov ${build_dir}/${component}/src/
   done
 done
 
