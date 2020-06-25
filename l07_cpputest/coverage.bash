@@ -27,7 +27,8 @@ do
   
     gcov --object-directory ${gcov_dir}  ${gcov_in_file} ${gcov_data_file} --object-file ${gcov_objet_file} ${gcov_data_file}
 
-    mv *.gcov ${build_dir}/${component}/src/
+    mv ${test_file}*.gcov ${build_dir}/${component}/src/
+    rm -rf *.gcov
   done
 done
 
