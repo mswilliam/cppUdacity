@@ -29,17 +29,29 @@ header_file_pattern=$(echo ${header_file_pattern}|sed -e 's/.*/__&__/g')
 
 read -r -p "Enter your full name: " author_name
 
-read -r -p "Enter the description: " description
+read -r -p "Enter the summary: " summary
 
-echo "/*!" > ${header_file_name}
-echo " *  \file ${header_file_name}" >> ${header_file_name}
+read -r -p "Enter the details_description: " details_description 
+
+echo "/*!             " > ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " *  \file       "${header_file_name} >> ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " *  \brief      "Goal: ${summary} >> ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " *  \details    "${details_description} >> ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " *  \author     "${author_name} >> ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " *  \version    "1.0 >> ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " *  \date       "$(date) >> ${header_file_name}
+echo " *  \copyright  "GNU Public License. >> ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " *" >> ${header_file_name}
+echo " **/" >> ${header_file_name}
 
 
 
-
-
-
-echo header file name: ${header_file_name}
-echo header file pattern: ${header_file_pattern}
-echo namespace name: ${namespace_name}
-
+vim ${header_file_name}
