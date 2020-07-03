@@ -52,6 +52,23 @@ echo " *" >> ${header_file_name}
 echo " *" >> ${header_file_name}
 echo " **/" >> ${header_file_name}
 
+echo >> ${header_file_name}
 
+echo "#ifndef" ${header_file_pattern} >> ${header_file_name}
+echo "#define" ${header_file_pattern} >> ${header_file_name}
+
+echo >> ${header_file_name}
+
+echo namespace operations { >> ${header_file_name}
+echo //  \namaspace operations >> ${header_file_name}
+
+echo >> ${header_file_name}
+echo >> ${header_file_name}
+echo >> ${header_file_name}
+echo >> ${header_file_name}
+
+echo }  // namespace operations  >> ${header_file_name}
+
+echo "#endif // " ${header_file_pattern} >> ${header_file_name}
 
 vim ${header_file_name}
