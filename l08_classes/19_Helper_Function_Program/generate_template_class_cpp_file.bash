@@ -14,7 +14,8 @@
 clear
 echo
 
-read -r -p "Enter the class name: " header_file_name
+read -r -p "Enter the class name: " class_name
+header_file_name=class_name
 
 read -r -p "Enter the namespace name: " namespace_name
 
@@ -26,7 +27,7 @@ absolute_path_header_file_name="$(pwd)/${header_file_name}.h"
 absolute_path_source_file_name="$(pwd)/${header_file_name}.cpp"
 
 header_file_pattern=$(echo ${header_file_pattern}|sed -e 's/\(.*\)/\U\1/g')
-header_file_pattern=$(echo ${header_file_pattern}|sed -e 's/.*/__&__/g')
+header_file_pattern=$(echo ${header_file_pattern}|sed -e 's/.*/__&_/g')
 
 read -r -p "Enter your full name: " author_name
 
@@ -97,27 +98,60 @@ echo "#define" ${header_file_pattern} >> ${absolute_path_header_file_name}
 
 echo >> ${absolute_path_header_file_name}
 
-echo namespace operations { >> ${absolute_path_header_file_name}
-echo namespace operations { >> ${absolute_path_source_file_name}
+echo namespace ${namespace_name} { >> ${absolute_path_header_file_name}
+echo namespace ${namespace_name} { >> ${absolute_path_source_file_name}
 
-echo //  \namaspace operations >> ${absolute_path_header_file_name}
-echo //  \namaspace operations >> ${absolute_path_source_file_name}
-
-echo >> ${absolute_path_header_file_name}
-echo >> ${absolute_path_source_file_name}
+echo //  \namaspace ${namespace_name} >> ${absolute_path_header_file_name}
+echo //  \namaspace ${namespace_name} >> ${absolute_path_source_file_name}
 
 echo >> ${absolute_path_header_file_name}
 echo >> ${absolute_path_source_file_name}
 
-echo >> ${absolute_path_header_file_name}
-echo >> ${absolute_path_source_file_name}
+echo "/* A class" ${class_name} "class*/" >> ${absolute_path_header_file_name}
+echo class ${class_name} "{" >> ${absolute_path_header_file_name}
 
 echo >> ${absolute_path_header_file_name}
 echo >> ${absolute_path_source_file_name}
 
-echo }  // namespace operations  >> ${absolute_path_header_file_name}
-echo }  // namespace operations  >> ${absolute_path_source_file_name}
+echo " public:" >> ${absolute_path_header_file_name}
+echo "  "${class_name} "();" >> ${absolute_path_header_file_name}
+echo "  ~"${class_name}"();" >> ${absolute_path_header_file_name}
 
-echo "#endif // " ${header_file_pattern} >> ${absolute_path_header_file_name}
+echo >> ${absolute_path_header_file_name}
+echo "  //Forbid the copy operations" >> ${absolute_path_header_file_name}
+echo "  "${class_name} "(const" ${class_name} "&) = delete;" >> ${absolute_path_header_file_name}
+echo "  "${class_name} "& operator= (const" ${class_name} "&) = delete;" >> ${absolute_path_header_file_name}
 
-vim ${absolute_path_header_file_name}
+echo >> ${absolute_path_header_file_name}
+
+echo "  //Forbid the move operations" >> ${absolute_path_header_file_name}
+echo "  "${class_name} "("${class_name}"&&) = delete;" >> ${absolute_path_header_file_name}
+echo "  "${class_name}"& operator= ("${class_name}"&&) = delete;" >> ${absolute_path_header_file_name}
+
+echo >> ${absolute_path_header_file_name}
+echo >> ${absolute_path_source_file_name}
+
+
+echo "};" >> ${absolute_path_header_file_name}
+
+echo >> ${absolute_path_header_file_name}
+
+echo "/*! \\class" ${class_name}.h >> ${absolute_path_header_file_name}
+echo " * \brief This is" ${class_name} "class" >> ${absolute_path_header_file_name}
+echo " *" >> ${absolute_path_header_file_name}
+echo " * Some details about the class" >> ${absolute_path_header_file_name}
+echo " */" >> ${absolute_path_header_file_name}
+
+echo >> ${absolute_path_header_file_name}
+echo >> ${absolute_path_source_file_name}
+
+echo ${class_name}::${class_name} "(){}" >> ${absolute_path_source_file_name}
+echo ~${class_name}::${class_name} "(){}" >> ${absolute_path_source_file_name}
+
+echo >> ${absolute_path_source_file_name}
+echo }  // namespace ${namespace_name}  >> ${absolute_path_header_file_name}
+echo }  // namespace ${namespace_name}  >> ${absolute_path_source_file_name}
+
+echo "#endif //" ${header_file_pattern} >> ${absolute_path_header_file_name}
+
+echo >>vim ${absolute_path_header_file_name}
