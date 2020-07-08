@@ -15,7 +15,7 @@ clear
 echo
 
 read -r -p "Enter the class name: " class_name
-header_file_name=class_name
+header_file_name=${class_name}
 
 read -r -p "Enter the namespace name: " namespace_name
 
@@ -93,6 +93,10 @@ echo " **/" >> ${absolute_path_source_file_name}
 echo >> ${absolute_path_header_file_name}
 echo >> ${absolute_path_source_file_name}
 
+echo '#include "../include/'${header_file_name}.h'"' >> ${absolute_path_source_file_name}
+
+echo >> ${absolute_path_source_file_name}
+
 echo "#ifndef" ${header_file_pattern} >> ${absolute_path_header_file_name}
 echo "#define" ${header_file_pattern} >> ${absolute_path_header_file_name}
 
@@ -101,8 +105,8 @@ echo >> ${absolute_path_header_file_name}
 echo namespace ${namespace_name} { >> ${absolute_path_header_file_name}
 echo namespace ${namespace_name} { >> ${absolute_path_source_file_name}
 
-echo //  \namaspace ${namespace_name} >> ${absolute_path_header_file_name}
-echo //  \namaspace ${namespace_name} >> ${absolute_path_source_file_name}
+echo //  \namespace ${namespace_name} >> ${absolute_path_header_file_name}
+echo //  \namespace ${namespace_name} >> ${absolute_path_source_file_name}
 
 echo >> ${absolute_path_header_file_name}
 echo >> ${absolute_path_source_file_name}
