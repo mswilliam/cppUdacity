@@ -38,6 +38,9 @@ read -r -p "Enter the details_description: " details_description
 echo "/*!             " > ${absolute_path_header_file_name}
 echo "/*!             " > ${absolute_path_source_file_name}
 
+echo " *  \copyright  "GNU Public License. >> ${absolute_path_header_file_name}
+echo " *  \copyright  "GNU Public License. >> ${absolute_path_source_file_name}
+
 echo " *" >> ${absolute_path_header_file_name}
 echo " *" >> ${absolute_path_source_file_name}
 
@@ -74,8 +77,6 @@ echo " *" >> ${absolute_path_source_file_name}
 echo " *  \date       "$(date) >> ${absolute_path_header_file_name}
 echo " *  \date       "$(date) >> ${absolute_path_source_file_name}
 
-echo " *  \copyright  "GNU Public License. >> ${absolute_path_header_file_name}
-echo " *  \copyright  "GNU Public License. >> ${absolute_path_source_file_name}
 
 echo " *" >> ${absolute_path_header_file_name}
 echo " *" >> ${absolute_path_source_file_name}
@@ -105,8 +106,8 @@ echo >> ${absolute_path_header_file_name}
 echo namespace ${namespace_name} { >> ${absolute_path_header_file_name}
 echo namespace ${namespace_name} { >> ${absolute_path_source_file_name}
 
-echo //  \namespace ${namespace_name} >> ${absolute_path_header_file_name}
-echo //  \namespace ${namespace_name} >> ${absolute_path_source_file_name}
+echo  // \namespace ${namespace_name} >> ${absolute_path_header_file_name}
+echo  // \namespace ${namespace_name} >> ${absolute_path_source_file_name}
 
 echo >> ${absolute_path_header_file_name}
 echo >> ${absolute_path_source_file_name}
@@ -122,13 +123,13 @@ echo "  "${class_name}"();" >> ${absolute_path_header_file_name}
 echo "  ~"${class_name}"();" >> ${absolute_path_header_file_name}
 
 echo >> ${absolute_path_header_file_name}
-echo "  //Forbid the copy operations" >> ${absolute_path_header_file_name}
+echo "  // Forbid the copy operations" >> ${absolute_path_header_file_name}
 echo "  "${class_name}"(const" ${class_name} "&) = delete;" >> ${absolute_path_header_file_name}
 echo "  "${class_name}"& operator=(const" ${class_name} "&) = delete;" >> ${absolute_path_header_file_name}
 
 echo >> ${absolute_path_header_file_name}
 
-echo "  //Forbid the move operations" >> ${absolute_path_header_file_name}
+echo "  // Forbid the move operations" >> ${absolute_path_header_file_name}
 echo "  "${class_name}"("${class_name}"&&) = delete;" >> ${absolute_path_header_file_name}
 echo "  "${class_name}"& operator=("${class_name}"&&) = delete;" >> ${absolute_path_header_file_name}
 
@@ -156,7 +157,7 @@ echo >> ${absolute_path_source_file_name}
 echo }  // namespace ${namespace_name}  >> ${absolute_path_header_file_name}
 echo }  // namespace ${namespace_name}  >> ${absolute_path_source_file_name}
 
-echo "#endif //" ${header_file_pattern} >> ${absolute_path_header_file_name}
+echo "#endif  //" ${header_file_pattern} >> ${absolute_path_header_file_name}
 
 echo >> ${absolute_path_header_file_name}
 echo >> ${absolute_path_source_file_name}
