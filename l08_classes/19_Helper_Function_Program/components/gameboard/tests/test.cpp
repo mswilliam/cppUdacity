@@ -13,10 +13,11 @@
  *
  **/
 
+#include <cstdint>
 #include "CppUTest/TestHarness.h"
 #include "../include/gameboard.h"
 
-TEST_GROUP (SetGameSpaceGroup) {
+TEST_GROUP (SetAndGetGameSpaceGroup) {
 
   //  Define data accessible to the test group members here.
 
@@ -26,72 +27,64 @@ TEST_GROUP (SetGameSpaceGroup) {
   void setup () {
     //  initialization steps are executed before each TEST
     for (uint8_t loc_row_index = 0; loc_row_index < gameboard::kGameSpaceSize; ++loc_row_index) {
-      for (uin8_t loc_col_index = 0; loc_col_index < kGameSpaceSize; ++loc_col_index) {
-        gl_gameboard[loc_row_index][loc_col_index] = '-';
+      for (uint8_t loc_col_index = 0; loc_col_index < gameboard::kGameSpaceSize; ++loc_col_index) {
+        gl_gameboard.setGameSpace(loc_row_index, loc_col_index, '-');
       }
     }
   }
 
   void tearDown () {
     //  ceanup steps are excuted after each TEST
+  }
+};
 
-  };
+TEST (SetAndGetGameSpaceGroup, setOneCharacter) {
+  uint8_t loc_row_upate_index {0};
+  uint8_t loc_col_update_index {0};
+  int8_t loc_updated_value {'a'};
 
-  TEST (SetGameSpaceGroup, ZeroPlusOne) {
-    uint8_t operation = '+';
-    float input1 = 0.0;
-    float input2 = 1.1;
-    float result;
+  gameboard::Gameboard loc_gameboard;
 
-    CHECK (operations::ErrorFunctionHandler::kOk == \
-        operations::Calculate(input1, input2, operation, result));
-
-    LONGS_EQUAL (1.0, result);
+  // copy the gameboard befor modification
+  for (uint8_t loc_row_index = 0; \
+      loc_row_index < gameboard::kGameSpaceSize; \
+      ++loc_row_index) {
+    for (uint8_t loc_col_index = 0; \
+        loc_col_index < gameboard::kGameSpaceSize; \
+        ++loc_col_index) {
+      loc_gameboard.setGameSpace(loc_row_index, \
+          loc_col_index, \
+          gl_gameboard.getGameSpace(loc_row_index, loc_col_index));
+    }
   }
 
-  TEST (SetGameSpaceGroup, setOneCharacter) {
-    uint8_t loc_row_upate_index {0};
-    uint8_t loc_col_update_index {0};
-    int8_t loc_updated_value {'a'};
+  // set the value
+  loc_gameboard.setGameSpace(loc_row_upate_index, \
+      loc_col_update_index, \
+      loc_updated_value);
 
-    gameboard::Gameboard loc_gameboard;
-
-    // copy the gameboard befor modification
-    for (uint8_t loc_row_index = 0; \
-        loc_row_index < gameboard::kGameSpaceSize; \
-        ++loc_row_index) {
-      for (uin8_t loc_col_index = 0; \
-          loc_col_index < kGameSpaceSize; \
-          ++loc_col_index) {
-        loc_gameboard.setGameSpace(loc_row_index, \
-            loc_col_index, \
-            gl_gameboard.getGameSpace(loc_row_index, loc_col_index));
+  // test
+  for (uint8_t loc_row_index = 0; \
+      loc_row_index < gameboard::kGameSpaceSize; \
+      ++loc_row_index) {
+    for (uint8_t loc_col_index = 0; \
+        loc_col_index < gameboard::kGameSpaceSize; \
+        ++loc_col_index) {
+      if (loc_row_index == loc_row_upate_index && \
+          loc_col_index == loc_col_update_index) {
+        CHECK (loc_gameboard.getGameSpace( \
+              loc_row_index, loc_col_index) == \
+            gl_gameboard.getGameSpace(loc_row_index, \
+              loc_col_index));
+      } else {
+        CHECK (loc_updated_value == \
+            gl_gameboard.getGameSpace(loc_row_index, \
+              loc_col_index));
       }
+      loc_gameboard.setGameSpace(loc_row_index, \
+          loc_col_index, \
+          gl_gameboard.getGameSpace(loc_row_index, loc_col_index));
     }
-
-    // set the value
-    loc_gameboard.setGameSpace(loc_row_upate_index, \
-        loc_col_update_index, \
-        loc_updated_value);
-
-    // test
-    for (uint8_t loc_row_index = 0; \
-        loc_row_index < gameboard::kGameSpace Size; \
-        ++loc_row_index) {
-      for (uin8_t loc_col_index = 0; \
-          loc_col_index < kGameSpaceSize; \
-          ++loc_col_index) {
-        loc_gameboard.setGameSpace(loc_row_index, \
-            loc_col_index, \
-            gl_gameboard.getGameSpace(loc_row_index, loc_col_index);
-            }
-            }
-
-            CHECK (operations::ErrorFunctionHandler::kOk == \
-              operations::Calculate(input1, input2, operation, result));
-
-            LONGS_EQUAL (0.0, result);
-            }
-
-
+  }
+}
 
