@@ -227,7 +227,7 @@ TEST (SetAndGetGameSpaceGroup, setOneCharacter) {
   }
 
   // set the value
-  loc_gameboard.setGameSpace (loc_row_upate_index, \
+  gl_gameboard.setGameSpace (loc_row_upate_index, \
       loc_col_update_index, \
       loc_updated_value);
 
@@ -240,18 +240,15 @@ TEST (SetAndGetGameSpaceGroup, setOneCharacter) {
         ++loc_col_index) {
       if (loc_row_index == loc_row_upate_index && \
           loc_col_index == loc_col_update_index) {
-        CHECK (loc_gameboard.getGameSpace( \
-              loc_row_index, loc_col_index) == \
+        CHECK_EQUAL (loc_updated_value, \
             gl_gameboard.getGameSpace(loc_row_index, \
               loc_col_index));
       } else {
-        CHECK (loc_updated_value == \
+        CHECK_EQUAL (loc_gameboard.getGameSpace( \
+              loc_row_index, loc_col_index), \
             gl_gameboard.getGameSpace(loc_row_index, \
               loc_col_index));
       }
-      loc_gameboard.setGameSpace (loc_row_index, \
-          loc_col_index, \
-          gl_gameboard.getGameSpace (loc_row_index, loc_col_index));
     }
   }
 }

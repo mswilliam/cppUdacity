@@ -49,11 +49,37 @@ namespace gameboard {
       uint8_t arg_row, \
       uint8_t arg_column \
       ) {
-    return 0;  // TODO(me)
+    int8_t loc_result {'*'};
+    if (arg_row < kGameSpaceSize && \
+        arg_column < kGameSpaceSize) {
+      loc_result = game_space_[arg_row][arg_column];
+    }
+    return loc_result;
   }
 
   bool Gameboard::fourInRow() {
-    return true;  // TODO(me)
+    bool loc_is_found {false};
+
+    uint8_t loc_row_index {0};
+    uint8_t loc_column_index {0};
+
+    while (false == loc_is_found && \
+        loc_row_index < kGameSpaceSize) {
+      uint8_t loc_nb_x_in_row {0};
+      while (false == loc_is_found && \
+          loc_column_index < kGameSpaceSize) {
+        if ('x' == \
+            game_space_[loc_row_index][loc_column_index]) {
+          ++loc_nb_x_in_row;
+          if (loc_nb_x_in_row >= kGameSpaceSize) {
+            loc_is_found = true;
+          }
+        }
+        ++loc_column_index;
+      }
+      ++loc_row_index;
+    }
+    return loc_is_found;
   }
 
   void Gameboard::printInfo() {
