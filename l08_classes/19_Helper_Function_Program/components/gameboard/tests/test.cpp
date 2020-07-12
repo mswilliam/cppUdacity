@@ -128,7 +128,9 @@ TEST (PrintInfoGameSpaceGroup, emptyBoard) {
 
   // assert checking nb characters
   stat ("output_redirection_file.txt", &loc_statistics);
-  CHECK_EQUAL (gameboard::kGameSpaceSize * gameboard::kGameSpaceSize, loc_statistics.st_size);
+  CHECK_EQUAL (gameboard::kGameSpaceSize * \
+      (gameboard::kGameSpaceSize + 1), \
+      loc_statistics.st_size);
 
   // assert checking content
   std::ifstream loc_redirection_file ("output_redirection_file.txt");

@@ -18,6 +18,7 @@
  **/
 
 #include "../include/gameboard.h"
+#include <iostream>
 
 namespace gameboard {
   // namespace gameboard
@@ -78,12 +79,22 @@ namespace gameboard {
         ++loc_column_index;
       }
       ++loc_row_index;
+      loc_column_index = 0;
     }
     return loc_is_found;
   }
 
   void Gameboard::printInfo() {
-    // TODO(me)
+    for (uint8_t loc_row_index = 0; \
+        loc_row_index < kGameSpaceSize; \
+        ++loc_row_index) {
+      for (uint8_t loc_column_index = 0; \
+          loc_column_index < kGameSpaceSize; \
+          ++loc_column_index) {
+        printf("%c", game_space_[loc_row_index][loc_column_index]);
+      }
+      printf("\n");
+    }
   }
 
 }  // namespace gameboard
